@@ -1,12 +1,10 @@
-/**
- * Created with IntelliJ IDEA.
- * User: Alex-Laptop
- * Date: 08/09/12
- * Time: 20:50
- * To change this template use File | Settings | File Templates.
- */
 package mypackage
 
-func Clear1(word string) string {
+import "strings"
+
+func Clear(word string) string {
+	if strings.HasPrefix(word, "Hello") {
+		return strings.Replace(word, "Hello", "World", -1)
+	}
 	return word
 }

@@ -4,15 +4,12 @@ import (
 	"fmt"
 	"strings"
 	"unicode/utf8"
+	"mypackage"
 )
-
-//func fieldFunc(d rune) bool {
-//	return strings.ContainsAny(string(d), " !")
-//}
 
 func main() {
 	s := "Hello \u2129 world!"
-	fmt.Println(s)
+	s = mypackage.Clear(s)
 	fn := func(d rune) bool {
 		return strings.ContainsAny(string(d), " !")
 	}
@@ -26,3 +23,7 @@ func main() {
 		fmt.Printf("%c", r)
 	}
 }
+
+//func fieldFunc(d rune) bool {
+//	return strings.ContainsAny(string(d), " !")
+//}
