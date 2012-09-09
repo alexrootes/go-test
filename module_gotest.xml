@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_gotest" default="compile.module.gotest">
+  <dirname property="module.gotest.basedir" file="${ant.file.module_gotest}"/>
+  
+  <property name="module.jdk.home.gotest" value="${jdk.home.go_sdk_go1.0.2}"/>
+  <property name="module.jdk.bin.gotest" value="${jdk.bin.go_sdk_go1.0.2}"/>
+  <property name="module.jdk.classpath.gotest" value="jdk.classpath.go_sdk_go1.0.2"/>
+  
+  <property name="compiler.args.gotest" value="${compiler.args}"/>
+  
+  <property name="gotest.output.dir" value="${module.gotest.basedir}/out/production/GoTest"/>
+  <property name="gotest.testoutput.dir" value="${module.gotest.basedir}/out/test/GoTest"/>
+  
+  <path id="gotest.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="gotest.module.production.classpath">
+    <path refid="${module.jdk.classpath.gotest}"/>
+  </path>
+  
+  <path id="gotest.runtime.production.module.classpath">
+    <pathelement location="${gotest.output.dir}"/>
+  </path>
+  
+  <path id="gotest.module.classpath">
+    <path refid="${module.jdk.classpath.gotest}"/>
+    <pathelement location="${gotest.output.dir}"/>
+  </path>
+  
+  <path id="gotest.runtime.module.classpath">
+    <pathelement location="${gotest.testoutput.dir}"/>
+    <pathelement location="${gotest.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.gotest">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.gotest">
+    <patternset refid="excluded.from.module.gotest"/>
+  </patternset>
+  
+  <path id="gotest.module.sourcepath">
+    <dirset dir="${module.gotest.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.gotest" depends="compile.module.gotest.production,compile.module.gotest.tests" description="Compile module GoTest"/>
+  
+  <target name="compile.module.gotest.production" depends="register.custom.compilers" description="Compile module GoTest; production classes">
+    <mkdir dir="${gotest.output.dir}"/>
+    <javac2 destdir="${gotest.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.gotest}/javac">
+      <compilerarg line="${compiler.args.gotest}"/>
+      <bootclasspath refid="gotest.module.bootclasspath"/>
+      <classpath refid="gotest.module.production.classpath"/>
+      <src refid="gotest.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.gotest"/>
+    </javac2>
+    
+    <copy todir="${gotest.output.dir}">
+      <fileset dir="${module.gotest.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.gotest.tests" depends="register.custom.compilers,compile.module.gotest.production" description="compile module GoTest; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.gotest" description="cleanup module">
+    <delete dir="${gotest.output.dir}"/>
+    <delete dir="${gotest.testoutput.dir}"/>
+  </target>
+</project>
