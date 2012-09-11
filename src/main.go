@@ -10,31 +10,34 @@ import (
 )
 
 var (
-	j int = 0
+	j int64 = 0
 )
 
 func makeCakeAndSend(cs chan string) {
 	j++
-	cakeName := "Strawberry Cake " + strconv.Itoa(j)
+	cakeName := "Strawberry Cake " + strconv.FormatInt(j,10)
 //	fmt.Println(strings.Title("Went to the shops"))
 	fmt.Println("Making a cake and sending ...", cakeName)
 	cs <- cakeName //send a strawberry cake
 }
 
 func receiveCakeAndPack(cs chan string) {
-	s := <-cs //get whatever cake is on the channel
-	fmt.Println("Packing received cake: ", s)
+	for {
+		s := <-cs //get whatever cake is on the channel
+		fmt.Println("Packing received cake: ", s)
+	}
 }
 
 func main() {
 	cs := make(chan string)
-	for i := 0; i<3; i++ {
+	go receiveCakeAndPack(cs)
+	for i := 0; i<100000; i++ {
 		go makeCakeAndSend(cs)
-		go receiveCakeAndPack(cs)
 
 		//sleep for a while so that the program doesn’t exit immediately and output is clear for illustration
-		time.Sleep(1*time.Second)
+		time.Sleep(10*time.Nanosecond)
 	}
+	time.Sleep(5*time.Second)
 }
 
 //func main() {
